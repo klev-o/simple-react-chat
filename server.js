@@ -2,9 +2,12 @@ const express = require('express');
 
 const app = express();
 
-app.get('/', (req, res) => {
-    console.log('123');
-    res.send();
+const rooms = new Map();
+
+app.get('/rooms', (req, res) => {
+    console.log('rooms');
+    rooms.set('test', '123')
+    res.json(rooms);
 });
 
 app.listen(9999, (err) => {
