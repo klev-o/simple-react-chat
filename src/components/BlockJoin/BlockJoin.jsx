@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'
 import socket from '../../socket';
 
-function BlockJoin() {
+function BlockJoin({onLogin}) {
     const [room, setRoom] = React.useState('')
     const [userName, setUserName] = React.useState('')
 
@@ -11,7 +11,7 @@ function BlockJoin() {
             return alert('Incorrect data')
         }
         console.log(room, userName)
-        axios.post('/rooms', {room, userName})
+        axios.post('/rooms', {room, userName}).then(onLogin)
     }
 
     return (
