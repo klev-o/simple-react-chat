@@ -6,12 +6,19 @@ function BlockJoin({onLogin}) {
     const [room, setRoom] = React.useState('')
     const [userName, setUserName] = React.useState('')
 
-    const onEnter = () => {
+    const onEnter = async () => {
         if (!room || !userName) {
             return alert('Incorrect data')
         }
         console.log(room, userName)
-        axios.post('/rooms', {room, userName}).then(onLogin)
+
+        const obj = {
+            room,
+            userName,
+        };
+
+        await axios.post('/rooms', obj);
+        onLogin(obj);
     }
 
     return (

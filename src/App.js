@@ -22,14 +22,22 @@ function App() {
         messages: [],
     });
 
-    const onLogin = () => {
+    const onLogin = async (obj) => {
         dispatch({
             type: 'JOINED',
-            payload: true,
+            payload: obj,
         });
+        socket.emit('ROOM:JOIN', obj);
     };
 
     console.log(state)
+
+    React.useEffect(() => {
+        socket.on('ROOM:SET_USERS', (users) => {
+            console.log('Новый пользователь присоединился!')
+            console.log(users)
+        });
+    }, []);
 
     return (
         <div className="wrapper">
