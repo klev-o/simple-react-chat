@@ -2,8 +2,23 @@ import React from 'react';
 import socket from '../../socket';
 import './chat.css'
 
-function Chat({ users, messages, userName, room }) {
+function Chat({ users, messages, userName, room, onAddMessage }) {
     const [messageValue, setMessageValue] = React.useState('');
+    const messagesRef = React.useRef(null);
+
+    const onSendMessage = () => {
+        socket.emit('ROOM:NEW_MESSAGE', {
+            userName,
+            room,
+            text: messageValue,
+        });
+        onAddMessage({ userName, text: messageValue });
+        setMessageValue('')
+    };
+
+    React.useEffect(() => {
+        messagesRef.current.scrollTo(0, 99999);
+    }, [messages]);
 
     return (
         <div className="chat">
@@ -18,7 +33,7 @@ function Chat({ users, messages, userName, room }) {
                 </ul>
             </div>
             <div className="chat-messages">
-                <div className="messages">
+                <div ref={messagesRef} className="messages">
                     {messages.map((message) => (
                         <div className="message">
                             <p>{message.text}</p>
@@ -34,7 +49,7 @@ function Chat({ users, messages, userName, room }) {
               onChange={(e) => setMessageValue(e.target.value)}
               className="form-control"
               rows="3"></textarea>
-                    <button type="button" className="btn btn-primary">
+                    <button onClick={onSendMessage} type="button" className="btn btn-primary">
                         Отправить
                     </button>
                 </form>

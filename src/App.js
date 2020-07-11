@@ -64,7 +64,7 @@ function App() {
             {!state.joined ? (
                 <BlockJoin onLogin={onLogin} />
             ) : (
-                <Chat {...state} />
+                <Chat {...state} onAddMessage={addMessage}  />
             )}
         </div>
     );
