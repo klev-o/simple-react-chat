@@ -15,6 +15,11 @@
     margin-bottom: 20px;
 }
 
+.message.own {
+    text-align: right;
+    margin: 0 10px 0 0;
+}
+
 .message p {
     display: inline-flex;
     padding: 10px 13px 13px;
