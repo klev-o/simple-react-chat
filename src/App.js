@@ -4,6 +4,7 @@ import socket from './socket';
 import BlockJoin from "./components/BlockJoin/BlockJoin";
 import reducer from './reducer';
 import axios from "axios";
+import Chat from "./components/Chat/Chat";
 
 
 //const socket = io('http://localhost:9999')
@@ -36,6 +37,10 @@ function App() {
         socket.on('ROOM:SET_USERS', (users) => {
             console.log('Новый пользователь присоединился!')
             console.log(users)
+            dispatch({
+                type: 'SET_USERS',
+                payload: users,
+            });
         });
     }, []);
 
@@ -44,7 +49,7 @@ function App() {
             {!state.joined ? (
                 <BlockJoin onLogin={onLogin} />
             ) : (
-                'null'
+                <Chat {...state} />
             )}
         </div>
     );
