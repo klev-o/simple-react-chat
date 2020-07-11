@@ -47,6 +47,15 @@ io.on('connection', (socket) => {
         socket.to(room).broadcast.emit('ROOM:SET_USERS', users);
     });
 
+    socket.on('ROOM:NEW_MESSAGE', ({ room, userName, text }) => {
+        const obj = {
+            userName,
+            text,
+        };
+        rooms.get(room).get('messages').push(obj);
+        socket.to(room).broadcast.emit('ROOM:NEW_MESSAGE', obj);
+    });
+
     socket.on('disconnect', () => {
         rooms.forEach((value, room) => {
             if (value.get('users').delete(socket.id)) {

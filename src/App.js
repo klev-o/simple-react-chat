@@ -36,6 +36,13 @@ function App() {
         });
     };
 
+    const addMessage = (message) => {
+        dispatch({
+            type: 'NEW_MESSAGE',
+            payload: message,
+        });
+    };
+
     const setUsers = (users) => {
         dispatch({
             type: 'SET_USERS',
@@ -49,6 +56,7 @@ function App() {
 
     React.useEffect(() => {
         socket.on('ROOM:SET_USERS', setUsers);
+        socket.on('ROOM:NEW_MESSAGE', addMessage);
     }, []);
 
     return (
