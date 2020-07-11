@@ -7,11 +7,18 @@ app.use(express.json());
 
 const rooms = new Map();
 
-// app.get('/rooms', (req, res) => {
-//     console.log('rooms');
-//     rooms.set('test', '123')
-//     res.json(rooms);
-// });
+app.get('/rooms/:id', (req, res) => {
+    const { id: room } = req.params;
+    const obj = rooms.has(room)
+        ? {
+            users: [...rooms.get(room).get('users').values()],
+            messages: [...rooms.get(room).get('messages').values()],
+        }
+        : { users: [], messages: [] };
+    res.json(obj);
+});
+
+
 
 app.post('/rooms', (req, res) => {
     const { room, userName } = req.body;
@@ -39,6 +46,15 @@ io.on('connection', (socket) => {
         const users = [...rooms.get(room).get('users').values()];
         socket.to(room).broadcast.emit('ROOM:SET_USERS', users);
     });
+
+    socket.on('disconnect', () => {
+        rooms.forEach((value, room) => {
+            if (value.get('users').delete(socket.id)) {
+                const users = [...value.get('users').values()];
+                socket.to(room).broadcast.emit('ROOM:SET_USERS', users);
+            }
+        });
+    })
 });
 
 server.listen(9999, (err) => {

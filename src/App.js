@@ -29,19 +29,26 @@ function App() {
             payload: obj,
         });
         socket.emit('ROOM:JOIN', obj);
+        const { data } = await axios.get(`/rooms/${obj.room}`);
+        dispatch({
+            type: 'SET_DATA',
+            payload: data,
+        });
+    };
+
+    const setUsers = (users) => {
+        dispatch({
+            type: 'SET_USERS',
+            payload: users,
+        });
+        console.log('Новый пользователь присоединился!')
+        console.log(users)
     };
 
     console.log(state)
 
     React.useEffect(() => {
-        socket.on('ROOM:SET_USERS', (users) => {
-            console.log('Новый пользователь присоединился!')
-            console.log(users)
-            dispatch({
-                type: 'SET_USERS',
-                payload: users,
-            });
-        });
+        socket.on('ROOM:SET_USERS', setUsers);
     }, []);
 
     return (
